@@ -3017,14 +3017,17 @@ int DoMouseCursor(void) {
 
     period = 0;
     this_call_time = PDGetTotalTime();
+    
     if (last_call_time == 0) {
         period = 1000;
     }
-    while (period <= 20) {
-        this_call_time = PDGetTotalTime();
+    if (last_call_time == 0) {
+        period = 1000;  // first frame bootstrap
+    } else {
         period = this_call_time - last_call_time;
-        // added by dethrace to avoid 100% CPU usage
-        gHarness_platform.Sleep(1);
+        if (period <= 0) {
+        period = 1; // prevent division by zero
+        }
     }
     GetMousePosition(&x_coord, &y_coord);
     mouse_moved = x_coord != gMouse_last_x_coord || y_coord != gMouse_last_y_coord;

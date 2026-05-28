@@ -3041,14 +3041,19 @@ int DoMouseCursor(void) {
     // GLOBAL: CARM95 0x520a18
     static int button_was_down;
 
-    do {
-        this_call_time = PDGetTotalTime();
-        if (last_call_time != 0) {
-            period = this_call_time - last_call_time;
-        } else {
-            period = 1000;
+    this_call_time = PDGetTotalTime();
+
+    if (last_call_time != 0) {
+        period = this_call_time - last_call_time;
+
+        // Prevent divide-by-zero or negative timing issues
+        if (period <= 0) {
+            period = 1;
         }
-    } while (period <= 20);
+    } else {
+        // First call bootstrap
+        period = 1000;
+    }
     GetMousePosition(&x_coord, &y_coord);
     mouse_moved = gMouse_last_x_coord != x_coord || gMouse_last_y_coord - y_coord != 0;
     button_is_down = EitherMouseButtonDown();

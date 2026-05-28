@@ -72,6 +72,10 @@ static int Harness_ProcessIniFile(void);
 static int Harness_InitPlatform(void) {
     int required_caps = 0;
 
+    #ifdef ENABLE_STEAM
+    Harness_Steam_Init();
+    #endif
+
     if (force_null_platform) {
         Null_Platform_Init(&gHarness_platform);
     } else {
@@ -127,9 +131,6 @@ static int Harness_InitPlatform(void) {
         }
         LOG_INFO3("Platform: %s (%s)", selected_bootstrap->name, selected_bootstrap->description);
     }
-#ifdef ENABLE_STEAM
-    Harness_Steam_Init();
-#endif
 
     return 0;
 }

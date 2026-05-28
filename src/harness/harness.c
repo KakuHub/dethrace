@@ -131,6 +131,9 @@ static int Harness_InitPlatform(void) {
         }
         LOG_INFO3("Platform: %s (%s)", selected_bootstrap->name, selected_bootstrap->description);
     }
+#ifdef ENABLE_STEAM
+    Harness_Steam_Init();
+#endif
 
     return 0;
 }
